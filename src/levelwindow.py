@@ -49,9 +49,11 @@ class Ui_LevelWindow(object):
         self.back = QtGui.QPushButton(self.centralwidget)
         self.back.setGeometry(QtCore.QRect(170, 280, 75, 23))
         self.back.setObjectName(_fromUtf8("back"))
+        MainWindow.connect(self.back, QtCore.SIGNAL("clicked()"),self.backclicked)
         self.jugar = QtGui.QPushButton(self.centralwidget)
         self.jugar.setGeometry(QtCore.QRect(350, 280, 75, 23))
         self.jugar.setObjectName(_fromUtf8("jugar"))
+        MainWindow.connect(self.jugar, QtCore.SIGNAL("clicked()"),self.jugarclicked)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 614, 21))
@@ -63,7 +65,10 @@ class Ui_LevelWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
+    def jugarclicked(self):
+        print("Prueba")
+    def backclicked(self):
+        print("Prueba")
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
         self.label.setText(_translate("MainWindow", "Dificultad:", None))

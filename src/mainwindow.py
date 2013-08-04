@@ -24,7 +24,7 @@ except AttributeError:
         return QtGui.QApplication.translate(context, text, disambig)
 
 class Ui_MainWindow(object):
-
+    a=''
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(761, 515)
@@ -68,6 +68,10 @@ class Ui_MainWindow(object):
         self.acerca.setText(_translate("MainWindow", "Acerca de..", None))
     
     def abrirLevel(self):
+        self.a=QtGui.QMainWindow()
+        ui=Ui_LevelWindow()
+        ui.setupUi(self.a)
+        self.a.show()
         #instanciar la clase
         print("hola")
 

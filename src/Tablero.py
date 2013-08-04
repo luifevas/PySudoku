@@ -8,7 +8,7 @@ Created on 31/07/2013
 from Casilla import Casilla
 import random
 from PyQt4 import QtCore,QtGui
-from sudokuwindow import Ui_MainWindow
+from sudokuwindow import Ui_SudokuWindow
 
 class Tablero:
     '''
