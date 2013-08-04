@@ -67,9 +67,6 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName(_fromUtf8("statusbar"))
         MainWindow.setStatusBar(self.statusbar)
         self.relojLayout.addWidget(LCDNumber())
-        #for i in range(0,9):
-         #   for j in range(0,9):
-          #      self.sudokuLayout.addWidget(QtGui.QLineEdit(),i,j)
             
 
         self.retranslateUi(MainWindow)
@@ -84,12 +81,4 @@ class Ui_MainWindow(object):
         self.checkBox.setText(_translate("MainWindow", "Jugadas Invalidas", None))
 
 
-if __name__ == "__main__":
-    import sys
-    app = QtGui.QApplication(sys.argv)
-    MainWindow = QtGui.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())
 

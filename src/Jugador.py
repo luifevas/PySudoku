@@ -4,8 +4,7 @@ Created on 31/07/2013
 @author: Administrador
 '''
 from Tablero import Tablero
-
-
+from PyQt4 import QtCore,QtGui
 
 class Jugador():
     '''

@@ -8,7 +8,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
-
+from levelwindow import Ui_LevelWindow
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -24,6 +24,7 @@ except AttributeError:
         return QtGui.QApplication.translate(context, text, disambig)
 
 class Ui_MainWindow(object):
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(761, 515)
@@ -37,6 +38,7 @@ class Ui_MainWindow(object):
         self.jugar = QtGui.QPushButton(self.centralwidget)
         self.jugar.setGeometry(QtCore.QRect(320, 180, 75, 23))
         self.jugar.setObjectName(_fromUtf8("jugar"))
+        MainWindow.connect(self.jugar, QtCore.SIGNAL("clicked()"),self.abrirLevel)
         self.cargar = QtGui.QPushButton(self.centralwidget)
         self.cargar.setGeometry(QtCore.QRect(320, 220, 75, 23))
         self.cargar.setObjectName(_fromUtf8("cargar"))
@@ -54,25 +56,18 @@ class Ui_MainWindow(object):
         self.statusbar = QtGui.QStatusBar(MainWindow)
         self.statusbar.setObjectName(_fromUtf8("statusbar"))
         MainWindow.setStatusBar(self.statusbar)
-
+    
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
+    
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
         self.jugar.setText(_translate("MainWindow", "Jugar", None))
         self.cargar.setText(_translate("MainWindow", "Cargar", None))
         self.salir.setText(_translate("MainWindow", "Salir", None))
         self.acerca.setText(_translate("MainWindow", "Acerca de..", None))
-    def on_jugar_clicked(self):
-        
-
-if __name__ == "__main__":
-    import sys
-    app = QtGui.QApplication(sys.argv)
-    MainWindow = QtGui.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())
+    
+    def abrirLevel(self):
+        #instanciar la clase
+        print("hola")
 

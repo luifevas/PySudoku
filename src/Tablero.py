@@ -7,6 +7,8 @@ Created on 31/07/2013
 
 from Casilla import Casilla
 import random
+from PyQt4 import QtCore,QtGui
+from sudokuwindow import Ui_MainWindow
 
 class Tablero:
     '''
@@ -15,6 +17,8 @@ class Tablero:
 
     casillas=[]
     casillasSudoku=[]
+    listaQLineEdit=[]
+    MainWindow=''
     
     def __init__(self,numPista):
         '''
@@ -28,7 +32,26 @@ class Tablero:
                 self.casillas.append(a)
         self.copiarTabla(self.casillas, self.casillasSudoku)
         self.colocarPista(numPista)
-           
+        self.MainWindow = QtGui.QMainWindow()
+        ui = Ui_MainWindow()
+        ui.setupUi(self.MainWindow)
+        for i in range(0,9):
+            for j in range(0,9):
+                x=QtGui.QLineEdit()
+                self.listaQLineEdit.append(x)
+                ui.sudokuLayout.addWidget(x,i,j)
+        self.llenarUI()
+        self.MainWindow.show()
+        
+    def llenarUI(self):
+        n=0
+        for elemento in self.listaQLineEdit:
+            numero=self.casillasSudoku[n].getContenido()
+            if numero!=0:
+                elemento.setText(str(numero))
+                elemento.setEnabled(False) 
+            n=n+1
+    
     def buscarRegion(self,i,j):
 
         if ((i>=1 and i<=3) and (j>=1 and j<=3)):
