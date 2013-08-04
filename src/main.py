@@ -6,8 +6,7 @@ Created on 03/08/2013
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import mainwindow
-import VentanaNivel
-from src import sudokuwindow
+
 class VentanaPrincipal(QMainWindow,mainwindow.Ui_MainWindow):
     def __init__(self,parent=None):
         super(VentanaPrincipal,self).__init__(parent)
@@ -19,16 +18,10 @@ class VentanaPrincipal(QMainWindow,mainwindow.Ui_MainWindow):
         
                      
     
-        
-      
-      
-      
-                
-    if __name__ == '__main__':
-        import sys
-        from main import VentanaPrincipal
-        app = QApplication(sys.argv)
-        ventana=VentanaPrincipal()
-        ventana.show()
-        app.exec_()
-        pass
+if __name__ == '__main__':
+    import sys
+    app = QApplication(sys.argv)
+    ventana=VentanaPrincipal()
+    ventana.show()
+    app.exec_()
+    pass

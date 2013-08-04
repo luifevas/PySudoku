@@ -9,6 +9,7 @@
 
 from PyQt4 import QtCore, QtGui
 from levelwindow import Ui_LevelWindow
+from VentanaNivel import VentanaNivel
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -68,10 +69,6 @@ class Ui_MainWindow(object):
         self.acerca.setText(_translate("MainWindow", "Acerca de..", None))
     
     def abrirLevel(self):
-        self.a=QtGui.QMainWindow()
-        ui=Ui_LevelWindow()
-        ui.setupUi(self.a)
-        self.a.show()
-        #instanciar la clase
-        print("hola")
+        self.m=VentanaNivel()
+        self.m.show()
 

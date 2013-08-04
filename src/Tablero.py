@@ -6,10 +6,11 @@ Created on 31/07/2013
 
 
 from Casilla import Casilla
+from Jugador import Jugador
 import random
-from PyQt4 import QtCore,QtGui
-from sudokuwindow import Ui_SudokuWindow
-
+from PyQt4 import QtGui,QtCore, QtGui
+from sudokuwindow import Ui_MainWindow
+from ventanaSud import VentanaSud
 class Tablero:
     '''
     classdocs
@@ -17,13 +18,16 @@ class Tablero:
 
     casillas=[]
     casillasSudoku=[]
+    casillasJuego=[]
     listaQLineEdit=[]
+    jugador=''
     MainWindow=''
     
-    def __init__(self,numPista):
+    def __init__(self,nombre,numPista):
         '''
         Constructor
         '''        
+        self.jugador=Jugador(nombre,numPista)
         for i in range(1,10):
             for j in range(1,10):
                 k=0
@@ -32,16 +36,39 @@ class Tablero:
                 self.casillas.append(a)
         self.copiarTabla(self.casillas, self.casillasSudoku)
         self.colocarPista(numPista)
-        self.MainWindow = QtGui.QMainWindow()
-        ui = Ui_MainWindow()
-        ui.setupUi(self.MainWindow)
+        self.copiarTabla(self.casillasSudoku, self.casillasJuego)
+        self.MainWindow = VentanaSud()
         for i in range(0,9):
             for j in range(0,9):
                 x=QtGui.QLineEdit()
+                self.MainWindow.connect(x, QtCore.SIGNAL("editingFinished()"),self.checkSudoku)
                 self.listaQLineEdit.append(x)
-                ui.sudokuLayout.addWidget(x,i,j)
+                self.MainWindow.sudokuLayout.addWidget(x,i,j)
         self.llenarUI()
         self.MainWindow.show()
+    
+    
+    def checkSudoku(self):
+        bandera=1
+        self.ObtenerDatosUi()
+        if(self.tableroLleno()):
+            bandera=1
+            for i in range(0,81):
+                if(self.casillasJuego[i].getContenido()>0 and self.casillasJuego[i].getContenido()<10):
+                    if(not(self.verificarRecuadro(self.casillasJuego[i],self.casillasJuego) and self.verificarHorizontal(self.casillasJuego[i],self.casillasJuego) and self.verificarVertical(self.casillasJuego[i],self.casillasJuego))):
+                        #mensaje de Finalizacion del juego
+                        bandera=0
+                        #QtGui.QMessageBox.information(self.MainWindow,"Mensaje","Sudoku Mal Resuelto")
+                        print("Sudoku Mal Resuelto")
+                        break
+                else:
+                    bandera=0
+            if (bandera==1):
+                self.MainWindow.close()
+                QtGui.QMessageBox.information(self.MainWindow,"Mensaje","Sudoku Resuelto")
+                print("Sudoku Resuelto")
+        else:
+            print("Sudoku Incompleto")
         
     def llenarUI(self):
         n=0
@@ -50,6 +77,17 @@ class Tablero:
             if numero!=0:
                 elemento.setText(str(numero))
                 elemento.setEnabled(False) 
+            n=n+1
+    
+    def ObtenerDatosUi(self):
+        n=0
+        for elemento in self.listaQLineEdit:
+            x=elemento.text()
+            if(x==''):
+                self.casillasJuego[n].setContenido(0)
+            else:
+                self.casillasJuego[n].setContenido(int(x))
+                
             n=n+1
     
     def buscarRegion(self,i,j):
@@ -73,36 +111,36 @@ class Tablero:
         if ((i>=7 and i<=9) and (j>=7 and j<=9)):
             return 9
         
-    def verificarHorizontal(self,casilla):
+    def verificarHorizontal(self,casilla,casillas):
         x=casilla.getFila()
         y=casilla.getColumna()
-        for elemento in self.casillasSudoku:                    
+        for elemento in casillas:                    
             if(x==elemento.getFila() and y!=elemento.getColumna()):
                 if(casilla.getContenido()==elemento.getContenido()):
                     return False                                                
         return True
     
-    def verificarVertical(self,casilla):
+    def verificarVertical(self,casilla,casillas):
         x=casilla.getFila()
         y=casilla.getColumna()
-        for elemento in self.casillasSudoku:
+        for elemento in casillas:
             if(x!=elemento.getFila() and y==elemento.getColumna()):
                 if(casilla.getContenido()==elemento.getContenido()):
                     return False                                                
         return True
     
-    def verificarRecuadro(self,casilla):
+    def verificarRecuadro(self,casilla,casillas):
         x=casilla.getFila()
         y=casilla.getColumna()
         region=casilla.getRegion()
-        for elemento in self.casillasSudoku:
+        for elemento in casillas:
             if(region==elemento.getRegion() and x!=elemento.getFila() and y!=elemento.getColumna()):
                 if(casilla.getContenido()==elemento.getContenido()):
                     return False
         return True
     
     def tableroLleno(self):
-        for elemento in self.casillasSudoku:
+        for elemento in self.casillasJuego:
             if(elemento.getContenido()==0):
                 return False
         return True
@@ -112,6 +150,7 @@ class Tablero:
         for elemento1 in casillas:
             a=Casilla(elemento1.getFila(), elemento1.getColumna(), elemento1.getRegion())
             a.setContenido(elemento1.getContenido())
+            a.setHabilitado(elemento1.getHabilitado())
             casillas2.append(a)
             
     
@@ -132,22 +171,22 @@ class Tablero:
                                 cont=cont+1                            
             cont=0        
     
-    def esPosible(self,posibilidad,casilla):
+    def esPosible(self,posibilidad,casilla,casillas):
         bandera=True
         if (casilla.getContenido()!=0):
-            return 
+            return False
         casilla.setContenido(posibilidad)
-        bandera=self.verificarHorizontal(casilla)
+        bandera=self.verificarHorizontal(casilla,casillas)
         if(bandera==False):
             casilla.setContenido(0)
             return False
         
-        bandera=self.verificarVertical(casilla)
+        bandera=self.verificarVertical(casilla,casillas)
         if(bandera==False):
             casilla.setContenido(0)
             return False
     
-        bandera=self.verificarRecuadro(casilla)
+        bandera=self.verificarRecuadro(casilla.casillas)
         if(bandera==False):
             casilla.setContenido(0)
             return False
@@ -155,43 +194,33 @@ class Tablero:
         return True
     
         
-    def listaDePosibilidades(self,casilla):        
+    def listaDePosibilidades(self,casilla,casillas):        
         posibilidad=[]
         for i in range(1,10):
-            if(self.esPosible(i,casilla)):
+            if(self.esPosible(i,casilla,casillas)):
                 posibilidad.append(i);
         return posibilidad;
     
     def jugadasIncorrectas(self):
-        for elemento in self.casillasSudoku:
+        for elemento in self.casillasJuego:
             if(elemento.getContenido()<10 and elemento.getContenido()>0):
-                if not(self.verificarHorizontal(elemento)):
-                    print("error en horizontal")
-                if not(self.verificarVertical(elemento)):
-                    print("error en vertical")
-                if not(self.verificarRecuadro(elemento)):
-                    print("error en recuadro")
-                if(not(self.verificarHorizontal(elemento)) and not(self.verificarVertical(elemento)) and not(self.verificarRecuadro(elemento))):
+                if(not(self.verificarHorizontal(elemento,self.casillasJuego)) and not(self.verificarVertical(elemento,self.casillasJuego)) and not(self.verificarRecuadro(elemento,self.casillasJuego))):
                     #cambio de color de casilla o advertencia de un numero mal ingresado
-                    print("1 "+str(elemento.getFila())+" "+str(elemento.getColumna()))
                     return False
             else:
                 #cambio de color de casilla o advertencia de un numero mal ingresado   
-                print("2 "+str(elemento.getFila())+" "+str(elemento.getColumna()))
                 return False
         
         
     def jugadasInvalidas(self):
         k=0
-        for elemento in self.casillasSudoku:
+        for elemento in self.casillasJuego:
             if(elemento.getContenido()<10 and elemento.getContenido()>0):
                 if(elemento.getContenido()!=self.casillas[k].getContenido()):
                     #advertencia de un numero mal ingresado
-                    print(str(elemento.getFila())+" "+str(elemento.getColumna()))
                     return False
             else:
                 #advertencia de un numero mal ingresado
-                print(str(elemento.getFila())+" "+str(elemento.getColumna()))
                 return False
             k=k+1
     
