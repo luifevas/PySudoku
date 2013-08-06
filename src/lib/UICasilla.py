@@ -8,17 +8,28 @@ from PyQt4 import QtCore
 
 class CasillaWidget(QtGui.QWidget):
     
-    def __init__(self, value = -1, locked = True ):
+    def __init__(self, value = -1, locked = True, wheelEnabled = True ):
         super(CasillaWidget, self).__init__()
         self.locked = locked
         self.value = value
         self.initUI()
         self.auxValue = [0, 0, 0, 0]
+        self.wheelEnabled = wheelEnabled
+        
+    def changeValue(self, v):
+        self.value = (self.value + v) % 10 
+    
+    def changeAuxValue(self, v, i):
+        self.auxValue[i] = (self.auxValue[i] + v) % 10 
+        
+    def keyPressEvent(self, event):
+        print "bla"
+        print event.key()
         
     def mousePressEvent(self, event):
         if not self.locked:
             if event.buttons() == QtCore.Qt.LeftButton:
-                self.value = (self.value + 1) % 10 
+                self.changeValue(1)
             else:
                 pos = event.pos()
                 i = 0;
@@ -31,9 +42,26 @@ class CasillaWidget(QtGui.QWidget):
                 else:
                     if ( pos.y() > 35): i = 2
                     else: i = 0
-                print(i)
-                self.auxValue[i] = (self.auxValue[i] + 1) % 10;
+                self.changeAuxValue(1,i)
         self.repaint()
+        
+    def wheelEvent(self, event):
+        if self.wheelEnabled and not self.locked:
+            pos = event.pos();
+            i = -1 
+            if ( pos.x() < 18 and pos.y() < 18 ): i = 0
+            elif ( pos.x() > 52 and pos.y() < 18 ): i = 1
+            elif ( pos.x() < 18 and pos.y() > 52 ): i = 2
+            elif ( pos.x() > 52 and pos.y() > 52 ): i = 3
+        #Aux Area
+            if i > -1:
+                v = 1 if event.delta() > 0 else -1
+                self.changeAuxValue(v,i)
+        #Normal Value    
+            else:
+                v = 1 if event.delta() > 0 else -1
+                self.changeValue(v)
+            self.repaint()
         
         
     def initUI(self):
@@ -90,23 +118,30 @@ class Group(QtGui.QWidget):
                 cas = CasillaWidget(i + j, locked)
                 grid.addWidget(cas, i, j)
         self.setWindowTitle('CasillaWidget Example')
+        #self.show()
+        
+        
+class Field(QtGui.QWidget):
+    def __init__(self):
+        super(Field, self).__init__()
+        
+        self.initUI()
+        
+    def initUI(self):
+        grid = QtGui.QGridLayout()
+        self.setLayout(grid)
+        for i in range(0,3):
+            for j in range(0,3):
+                g = Group()
+                grid.addWidget(g, i, j)
+        self.setWindowTitle('Sudoku Field')
         self.show()
         
 def main():
     
     app = QtGui.QApplication(sys.argv)
-    gr = Group()
+    f = Field()
     sys.exit(app.exec_())
     
 if __name__ == '__main__':
     main()
-         
-        
-        
-        
-        
-        
-    
-        
-    
-    
