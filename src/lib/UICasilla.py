@@ -8,23 +8,27 @@ from PyQt4 import QtCore
 
 class CasillaWidget(QtGui.QWidget):
     
-    def __init__(self, value = -1, locked = True, wheelEnabled = True ):
+    def __init__(self, value = -1, cId, locked = True, wheelEnabled = True ):
         super(CasillaWidget, self).__init__()
         self.locked = locked
         self.value = value
         self.initUI()
         self.auxValue = [0, 0, 0, 0]
         self.wheelEnabled = wheelEnabled
+
+    def setValue(self, v):
+        pass
         
     def changeValue(self, v):
         self.value = (self.value + v) % 10 
+        #emit valueChanged(id, v)
     
     def changeAuxValue(self, v, i):
         self.auxValue[i] = (self.auxValue[i] + v) % 10 
         
     def keyPressEvent(self, event):
-        print "bla"
-        print event.key()
+        print("bla")
+        print(event.key())
         
     def mousePressEvent(self, event):
         if not self.locked:
@@ -122,6 +126,15 @@ class Group(QtGui.QWidget):
         
         
 class Field(QtGui.QWidget):
+    def setValue(self, cId , v):
+        pass
+
+    def markField(self, cId):
+        pass
+
+    def lockField(self, cId):
+        pass
+
     def __init__(self):
         super(Field, self).__init__()
         

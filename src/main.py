@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 03/08/2013
 
@@ -5,6 +6,7 @@ Created on 03/08/2013
 '''
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+
 import mainwindow
 
 class VentanaPrincipal(QMainWindow,mainwindow.Ui_MainWindow):
