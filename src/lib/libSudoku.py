@@ -45,7 +45,7 @@ def _swap_values(v1, v2):
 
 """ wrapper function 
 
-    let's me call any function with a list of arguments instead
+    lets me call any function with a list of arguments instead
     heaving to pass each one individually. This can safe a lot of 
     time/code.
 """
