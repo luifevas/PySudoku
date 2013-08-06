@@ -19,10 +19,10 @@ class Test(unittest.TestCase):
         self.assertFalse(is_board_valid(newBoard), "invalid board deemed to be valid - group")
         newBoard= get_new_board()
         newBoard[0][8] = newBoard[0][0]
-        self.assertFalse(is_board_valid(newBoard), "invalid board deemd te be valid - row") 
+        self.assertFalse(is_board_valid(newBoard), "invalid board deemed to be valid - row") 
         newBoard= get_new_board()
         newBoard[8][8] = newBoard[0][8]
-        self.assertFalse(is_board_valid(newBoard), "invalid board deemd te be valid - col") 
+        self.assertFalse(is_board_valid(newBoard), "invalid board deemed to be valid - col") 
 
 
 if __name__ == "__main__":
