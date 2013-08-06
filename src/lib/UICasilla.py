@@ -8,16 +8,25 @@ from PyQt4 import QtCore
 
 class CasillaWidget(QtGui.QWidget):
     
-    def __init__(self, value = -1, cId, locked = True, wheelEnabled = True ):
+    def __init__(self, value, cId, locked = False, wheelEnabled = True ):
         super(CasillaWidget, self).__init__()
+        self.marked = False
         self.locked = locked
         self.value = value
         self.initUI()
         self.auxValue = [0, 0, 0, 0]
         self.wheelEnabled = wheelEnabled
+        
+    def setLock(self, lock):
+        self.locked = lock
+        
+    def setMark(self, mark):
+        self.marked = mark
+        self.repaint()
 
     def setValue(self, v):
-        pass
+        self.value = v
+        self.repaint()
         
     def changeValue(self, v):
         self.value = (self.value + v) % 10 
@@ -79,7 +88,10 @@ class CasillaWidget(QtGui.QWidget):
         
     def drawWidget(self, qp):
         #draw border
-        rectBg = QtGui.QColor(200, 200, 200) if self.locked else QtGui.QColor(240, 240, 240)
+        if self.marked:
+            rectBg = QtGui.QColor(255, 180, 180) if self.locked else QtGui.QColor(255, 240, 240)
+        else:
+            rectBg = QtGui.QColor(180, 180, 180) if self.locked else QtGui.QColor(240, 240, 240)
         qp.setPen(QtGui.QColor(255, 255, 255))
         qp.fillRect(0,0, 70, 70, rectBg)
 
@@ -106,10 +118,15 @@ class CasillaWidget(QtGui.QWidget):
         
 class Group(QtGui.QWidget):
     
-    def __init__(self):
+    def __init__(self, gId):
         super(Group, self).__init__()
-        
+        self.gId = gId
+        self.casillas = []
+
         self.initUI()
+        
+    def getCasilla(self, xs):
+        return self.casillas[xs]
         
     def initUI(self):
         grid = QtGui.QGridLayout()
@@ -119,25 +136,34 @@ class Group(QtGui.QWidget):
                 locked = False;
                 if i % 2 == 0: 
                     locked = True;
-                cas = CasillaWidget(i + j, locked)
+                cId = self.gId * 27 + i * 9 + j
+                cas = CasillaWidget(i + j, cId,locked)
+                self.casillas.append(cas)
                 grid.addWidget(cas, i, j)
         self.setWindowTitle('CasillaWidget Example')
         #self.show()
         
         
 class Field(QtGui.QWidget):
+    
     def setValue(self, cId , v):
-        pass
+        self.getCasilla(cId).setValue(v)
 
-    def markField(self, cId):
-        pass
+    def setMark(self, cId, mark):
+        self.getCasilla(cId).setMark(mark)
 
     def lockField(self, cId):
-        pass
+        self.getCasilla(cId).setLock(True)
+    
+    def getCasilla(self, cId):
+        (gId, xs) = _cIdToGroup(cId);
+        print(gId)
+        print(xs)
+        return self.groups[gId].getCasilla(xs)
 
     def __init__(self):
         super(Field, self).__init__()
-        
+        self.groups = []
         self.initUI()
         
     def initUI(self):
@@ -145,10 +171,30 @@ class Field(QtGui.QWidget):
         self.setLayout(grid)
         for i in range(0,3):
             for j in range(0,3):
-                g = Group()
+                gId = i * 3 + j
+                g = Group(gId)
+                self.groups.append(g)
                 grid.addWidget(g, i, j)
+        self.setMark(0, True)
+        self.setMark(80, True)
+        self.setMark(56, True)
         self.setWindowTitle('Sudoku Field')
         self.show()
+        
+#Helpers 
+        
+def _cIdToGroup(cId):
+    groupCol = cId // 3 % 3
+    groupRow = cId // 27
+    row = cId // 9
+    col = cId % 9 
+    rowXs = row - groupRow * 3
+    colXs = col - groupCol * 3
+    xs = rowXs * 3 + colXs 
+    gId = groupRow * 3 + groupCol
+    return (gId, xs)
+
+# main
         
 def main():
     
