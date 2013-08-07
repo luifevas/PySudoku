@@ -10,6 +10,7 @@
 from PyQt4 import QtCore, QtGui
 from levelwindow import Ui_LevelWindow
 from VentanaNivel import VentanaNivel
+from Ranking import VentanaRanking
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -49,6 +50,7 @@ class Ui_MainWindow(object):
         self.acerca = QtGui.QPushButton(self.centralwidget)
         self.acerca.setGeometry(QtCore.QRect(320, 260, 75, 23))
         self.acerca.setObjectName(_fromUtf8("acerca"))
+        MainWindow.connect(self.acerca, QtCore.SIGNAL("clicked()"),self.abrirRanking)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 761, 21))
@@ -61,6 +63,9 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
     
+    def abrirRanking(self):
+        self.m=VentanaRanking()
+        self.m.show()
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
         self.jugar.setText(_translate("MainWindow", "Jugar", None))

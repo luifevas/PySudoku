@@ -11,6 +11,7 @@ from PyQt4 import QtCore, QtGui
 from Tablero import Tablero
 from ventanaSud import VentanaSud
 
+
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -80,7 +81,8 @@ class Ui_LevelWindow(object):
         self.m=Tablero(self.name.text(),d)
     
     def backclicked(self):
-        print("Prueba")
+        print("prueba")
+        
    
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))

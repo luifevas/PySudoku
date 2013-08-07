@@ -12,6 +12,7 @@ from PyQt4 import QtGui,QtCore, QtGui
 from sudokuwindow import Ui_SudokuWindow
 from ventanaSud import VentanaSud
 from src.lib import UICasilla
+from src.lib import libSudoku
 from LCDNumber import LCDNumber
 class Tablero:
     '''
@@ -26,6 +27,7 @@ class Tablero:
     MainWindow=''
     reloj=''
     x=''
+    board=[]
     
     def __init__(self,nombre,numPista):
         '''
@@ -50,6 +52,7 @@ class Tablero:
                 #self.MainWindow.connect(x, QtCore.SIGNAL("editingFinished()"),self.checkSudoku)
                 #self.listaQLineEdit.append(x)
                 #self.MainWindow.sudokuLayout.addWidget(x,i,j)
+        self.board=libSudoku.get_new_board("Easy")
         self.x=UICasilla.Board()
         self.llenarSudoku(self.x)
         self.MainWindow.tableroLayout.addWidget(self.x)
@@ -81,10 +84,10 @@ class Tablero:
      
      
      
-    def llenarSudoku(self,board):
-        for i in range(0,81):
-            board.setValue(i,5)
-            board.setLock(i,False)
+    def llenarSudoku(self,b):
+        for i in range(0,80):
+            b.setValue(i,self.board[i])
+            b.setLock(i,False)
             
             
     def llenarUI(self):
