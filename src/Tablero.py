@@ -9,8 +9,9 @@ from Casilla import Casilla
 from Jugador import Jugador
 import random
 from PyQt4 import QtGui,QtCore, QtGui
-from sudokuwindow import Ui_MainWindow
+from sudokuwindow import Ui_SudokuWindow
 from ventanaSud import VentanaSud
+from src.lib import UICasilla
 class Tablero:
     '''
     classdocs
@@ -38,12 +39,14 @@ class Tablero:
         self.colocarPista(numPista)
         self.copiarTabla(self.casillasSudoku, self.casillasJuego)
         self.MainWindow = VentanaSud()
-        for i in range(0,9):
-            for j in range(0,9):
-                x=QtGui.QLineEdit()
-                self.MainWindow.connect(x, QtCore.SIGNAL("editingFinished()"),self.checkSudoku)
-                self.listaQLineEdit.append(x)
-                self.MainWindow.sudokuLayout.addWidget(x,i,j)
+        #for i in range(0,9):
+            #for j in range(0,9):
+                #x=QtGui.QLineEdit()
+                #self.MainWindow.connect(x, QtCore.SIGNAL("editingFinished()"),self.checkSudoku)
+                #self.listaQLineEdit.append(x)
+                #self.MainWindow.sudokuLayout.addWidget(x,i,j)
+        x=UICasilla.Board()
+        self.MainWindow.tableroLayout.addWidget(x)
         self.llenarUI()
         self.MainWindow.show()
     
