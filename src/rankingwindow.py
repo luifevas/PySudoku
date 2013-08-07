@@ -23,7 +23,7 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_MainWindow(object):
+class Ui_RankingWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(709, 515)
@@ -35,7 +35,7 @@ class Ui_MainWindow(object):
         self.back = QtGui.QPushButton(self.centralwidget)
         self.back.setGeometry(QtCore.QRect(510, 370, 75, 23))
         self.back.setObjectName(_fromUtf8("back"))
-        MainWindow.connect(self.back,QtCore.SIGNAL("clicked()"),self.backclicked)
+        #MainWindow.connect(self.back,QtCore.SIGNAL("clicked()"),self.backclicked)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 709, 21))
@@ -51,8 +51,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
         self.back.setText(_translate("MainWindow", "Atrás", None))
-
-        
+    
         
 
 if __name__ == "__main__":

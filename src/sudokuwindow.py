@@ -8,7 +8,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
-from LCDNumber import LCDNumber
+from src.LCDNumber import LCDNumber
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -64,7 +64,6 @@ class Ui_SudokuWindow(object):
         self.statusbar = QtGui.QStatusBar(SudokuWindow)
         self.statusbar.setObjectName(_fromUtf8("statusbar"))
         SudokuWindow.setStatusBar(self.statusbar)
-        self.relojLayout.addWidget(LCDNumber())
         self.retranslateUi(SudokuWindow)
         QtCore.QMetaObject.connectSlotsByName(SudokuWindow)
 

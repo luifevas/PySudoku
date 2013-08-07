@@ -11,18 +11,21 @@ import random
 from PyQt4 import QtGui,QtCore, QtGui
 from sudokuwindow import Ui_SudokuWindow
 from ventanaSud import VentanaSud
-from lib import UICasilla
+from src.lib import UICasilla
+from LCDNumber import LCDNumber
 class Tablero:
     '''
     classdocs
     '''
-
     casillas=[]
-    casillasSudoku=[]
+    casillasSudoku=[] #casillas listo para jugar
+
     casillasJuego=[]
     listaQLineEdit=[]
     jugador=''
     MainWindow=''
+    reloj=''
+    x=''
     
     def __init__(self,nombre,numPista):
         '''
@@ -31,6 +34,7 @@ class Tablero:
         self.jugador=Jugador(nombre,numPista)
         for i in range(1,10):
             for j in range(1,10):
+                k=0
                 k=self.buscarRegion(i,j)
                 a=Casilla(i,j,k)
                 self.casillas.append(a)
@@ -38,14 +42,17 @@ class Tablero:
         self.colocarPista(numPista)
         self.copiarTabla(self.casillasSudoku, self.casillasJuego)
         self.MainWindow = VentanaSud()
+        self.reloj= LCDNumber()
+        self.MainWindow.relojLayout.addWidget(self.reloj)
         #for i in range(0,9):
             #for j in range(0,9):
                 #x=QtGui.QLineEdit()
                 #self.MainWindow.connect(x, QtCore.SIGNAL("editingFinished()"),self.checkSudoku)
                 #self.listaQLineEdit.append(x)
                 #self.MainWindow.sudokuLayout.addWidget(x,i,j)
-        x=UICasilla.Board()
-        self.MainWindow.tableroLayout.addWidget(x)
+        self.x=UICasilla.Board()
+        self.llenarSudoku(self.x)
+        self.MainWindow.tableroLayout.addWidget(self.x)
         self.llenarUI()
         self.MainWindow.show()
     
@@ -71,24 +78,55 @@ class Tablero:
                 print("Sudoku Resuelto")
         else:
             print("Sudoku Incompleto")
-        
+     
+     
+     
+    def llenarSudoku(self,board):
+        for i in range(0,81):
+            board.setValue(i,5)
+            board.setLock(i,False)
+            
+            
     def llenarUI(self):
-        for n, elemento in enumerate(self.listaQLineEdit):
+        n=0
+        for elemento in self.listaQLineEdit:
             numero=self.casillasSudoku[n].getContenido()
             if numero!=0:
                 elemento.setText(str(numero))
                 elemento.setEnabled(False) 
+            n=n+1
     
     def ObtenerDatosUi(self):
-        for n, elemento in enumerate(self.listaQLineEdit):
+        n=0
+        for elemento in self.listaQLineEdit:
             x=elemento.text()
             if(x==''):
                 self.casillasJuego[n].setContenido(0)
             else:
                 self.casillasJuego[n].setContenido(int(x))
+                
+            n=n+1
     
     def buscarRegion(self,i,j):
-        return ((i - 1)// 3 * 3) + (j - 1)// 3 + 1
+
+        if ((i>=1 and i<=3) and (j>=1 and j<=3)):
+            return 1
+        if ((i>=1 and i<=3) and (j>=4 and j<=6)):
+            return 2
+        if ((i>=1 and i<=3) and (j>=7 and j<=9)):
+            return 3
+        if ((i>=4 and i<=6) and (j>=1 and j<=3)):
+            return 4
+        if ((i>=4 and i<=6) and (j>=4 and j<=6)):
+            return 5
+        if ((i>=4 and i<=6) and (j>=7 and j<=9)):
+            return 6
+        if ((i>=7 and i<=9) and (j>=1 and j<=3)):
+            return 7
+        if ((i>=7 and i<=9) and (j>=4 and j<=6)):
+            return 8
+        if ((i>=7 and i<=9) and (j>=7 and j<=9)):
+            return 9
         
     def verificarHorizontal(self,casilla,casillas):
         x=casilla.getFila()
@@ -192,7 +230,8 @@ class Tablero:
         
         
     def jugadasInvalidas(self):
-        for k,elemento in enumerate(self.casillasJuego):
+        k=0
+        for elemento in self.casillasJuego:
             if(elemento.getContenido()<10 and elemento.getContenido()>0):
                 if(elemento.getContenido()!=self.casillas[k].getContenido()):
                     #advertencia de un numero mal ingresado
@@ -200,5 +239,6 @@ class Tablero:
             else:
                 #advertencia de un numero mal ingresado
                 return False
+            k=k+1
     
         
