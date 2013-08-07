@@ -57,37 +57,34 @@ class Tablero:
         self.llenarSudoku(self.x)
         self.MainWindow.tableroLayout.addWidget(self.x)
         self.llenarUI()
+        #for casilla in self.x.getAllCasillas():
+            #self.MainWindow.connect(casilla,"valueChanged()",self.checkSudoku())
         self.MainWindow.show()
     
     
-    def checkSudoku(self):
-        bandera=1
-        self.ObtenerDatosUi()
-        if(self.tableroLleno()):
-            bandera=1
-            for i in range(0,81):
-                if(self.casillasJuego[i].getContenido()>0 and self.casillasJuego[i].getContenido()<10):
-                    if(not(self.verificarRecuadro(self.casillasJuego[i],self.casillasJuego) and self.verificarHorizontal(self.casillasJuego[i],self.casillasJuego) and self.verificarVertical(self.casillasJuego[i],self.casillasJuego))):
-                        #mensaje de Finalizacion del juego
-                        bandera=0
-                        #QtGui.QMessageBox.information(self.MainWindow,"Mensaje","Sudoku Mal Resuelto")
-                        print("Sudoku Mal Resuelto")
-                        break
-                else:
-                    bandera=0
-            if (bandera==1):
-                self.MainWindow.close()
-                QtGui.QMessageBox.information(self.MainWindow,"Mensaje","Sudoku Resuelto")
-                print("Sudoku Resuelto")
-        else:
-            print("Sudoku Incompleto")
-     
+    #def checkSudoku(self):
+        #listacasillas=self.x.getAllCasillas()
+        #llcas = [listacasillas[x:x+9] for x in range(0, len(listacasillas), 9)]
+        #if libSudoku.is_board_valid(llcas):
+            #self.MainWindow.close()
+            
+            
+            
      
      
     def llenarSudoku(self,b):
-        for i in range(0,80):
-            b.setValue(i,self.board[i])
-            b.setLock(i,False)
+        casillas = libSudoku.get_new_board("Easy")
+        casillasCompletas = casillas[0]
+        casillasAgujeros = casillas[1]
+        for i in range(0,9):
+            for j in range(0,9):
+                cID = i * 9 + j
+                v = casillasAgujeros[i][j]
+                b.setValue(cID,v)
+                if v < 1:
+                    b.setLock(cID,False)
+                else:
+                    b.setLock(cID, True)
             
             
     def llenarUI(self):
@@ -130,7 +127,6 @@ class Tablero:
             return 8
         if ((i>=7 and i<=9) and (j>=7 and j<=9)):
             return 9
-        
     def verificarHorizontal(self,casilla,casillas):
         x=casilla.getFila()
         y=casilla.getColumna()

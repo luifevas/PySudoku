@@ -20,6 +20,7 @@ class CasillaWidget(QtGui.QWidget):
         self.initUI()
         self.auxValue = [0, 0, 0, 0]
         self.wheelEnabled = wheelEnabled
+        self.cId = cId
         
     def setLock(self, lock):
         self.locked = lock
@@ -35,7 +36,7 @@ class CasillaWidget(QtGui.QWidget):
         
     def changeValue(self, v):
         self.value = (self.value + v) % 10 
-        #emit valueChanged(id, v)
+        self.emit(QtCore.SIGNAL("valueChanged()"))
     
     def changeAuxValue(self, v, i):
         self.auxValue[i] = (self.auxValue[i] + v) % 10 

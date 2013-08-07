@@ -14,7 +14,8 @@ class VentanaPrincipal(QMainWindow,mainwindow.Ui_MainWindow):
         super(VentanaPrincipal,self).__init__(parent)
         self.setupUi(self)
         self.connect(self.jugar, SIGNAL("clicked()"),self.jugarclicked)
-        self.connect(self.acerca,SIGNAL("clicked()"),self.rankingclick)           
+        self.connect(self.acerca,SIGNAL("clicked()"),self.rankingclick)
+                   
     def jugarclicked(self):
         self.close() 
     def rankingclick(self):
