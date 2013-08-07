@@ -68,6 +68,8 @@ def _get_random_group_pair():
     permuting a valid protoype
 """
 def get_new_board(level):
+    #empty the cache
+    __table_cache = {}
     while True:
         try:
             for i in range(100):
@@ -221,5 +223,3 @@ def is_board_valid(board):
             if not _is_group_valid(board, i * 3, j * 3):
                 return False 
     return True
-
-if __name__ == "__main__":
