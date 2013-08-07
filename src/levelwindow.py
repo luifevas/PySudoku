@@ -70,11 +70,11 @@ class Ui_LevelWindow(object):
     def jugarclicked(self):
         x=self.level.currentText()
         d=0
-        if(x=="Fácil"):
+        if(x=="Facil"):
             d=3
         if(x=="Medio"):
             d=5
-        if(x=="Difícil"):
+        if(x=="Dificil"):
             d=7
         print(str(d))
         self.m=Tablero(self.name.text(),d)
