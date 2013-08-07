@@ -1,6 +1,8 @@
 from random import sample, choice, randint
 from copy import deepcopy
 
+__table_cache = {}
+
 _field_prototype = [
          [1, 2, 3,  4, 5, 6,  7, 8, 9],
          [4, 5, 6,  7, 8, 9,  1, 2, 3],
@@ -145,6 +147,8 @@ def _hasUniqueSolution(origTable):
     one valid solution
 """
 def _numberOfSolutions(origTable):
+    numberOfSolutions = __table_cache.get(str(origTable))
+    if numberOfSolutions != None: return numberOfSolutions
     toSolve = deepcopy(origTable)
     stillLooking = True
     for x, row in enumerate(toSolve):
@@ -165,7 +169,9 @@ def _numberOfSolutions(origTable):
             numberOfSolutions += _numberOfSolutions(toSolve)
             # let's do not continue looking for solutions
             if numberOfSolutions > 1:
+                __table_cache[str(origTable)] = numberOfSolutions
                 return numberOfSolutions
+    __table_cache[str(origTable)] = numberOfSolutions
     return numberOfSolutions
     
 def _isValidSudokuValue(v):
