@@ -11,7 +11,7 @@ import random
 from PyQt4 import QtGui,QtCore, QtGui
 from sudokuwindow import Ui_SudokuWindow
 from ventanaSud import VentanaSud
-from src.lib import UICasilla
+from lib import UICasilla
 class Tablero:
     '''
     classdocs
@@ -74,45 +74,22 @@ class Tablero:
             print("Sudoku Incompleto")
         
     def llenarUI(self):
-        n=0
-        for elemento in self.listaQLineEdit:
+        for n, elemento in enumerate(self.listaQLineEdit):
             numero=self.casillasSudoku[n].getContenido()
             if numero!=0:
                 elemento.setText(str(numero))
                 elemento.setEnabled(False) 
-            n=n+1
     
     def ObtenerDatosUi(self):
-        n=0
-        for elemento in self.listaQLineEdit:
+        for n, elemento in enumerate(self.listaQLineEdit):
             x=elemento.text()
             if(x==''):
                 self.casillasJuego[n].setContenido(0)
             else:
                 self.casillasJuego[n].setContenido(int(x))
-                
-            n=n+1
     
     def buscarRegion(self,i,j):
-
-        if ((i>=1 and i<=3) and (j>=1 and j<=3)):
-            return 1
-        if ((i>=1 and i<=3) and (j>=4 and j<=6)):
-            return 2
-        if ((i>=1 and i<=3) and (j>=7 and j<=9)):
-            return 3
-        if ((i>=4 and i<=6) and (j>=1 and j<=3)):
-            return 4
-        if ((i>=4 and i<=6) and (j>=4 and j<=6)):
-            return 5
-        if ((i>=4 and i<=6) and (j>=7 and j<=9)):
-            return 6
-        if ((i>=7 and i<=9) and (j>=1 and j<=3)):
-            return 7
-        if ((i>=7 and i<=9) and (j>=4 and j<=6)):
-            return 8
-        if ((i>=7 and i<=9) and (j>=7 and j<=9)):
-            return 9
+        return ((i - 1)// 3 * 3) + (j - 1)// 3 + 1
         
     def verificarHorizontal(self,casilla,casillas):
         x=casilla.getFila()
@@ -216,8 +193,7 @@ class Tablero:
         
         
     def jugadasInvalidas(self):
-        k=0
-        for elemento in self.casillasJuego:
+        for k,elemento in enumerate(self.casillasJuego):
             if(elemento.getContenido()<10 and elemento.getContenido()>0):
                 if(elemento.getContenido()!=self.casillas[k].getContenido()):
                     #advertencia de un numero mal ingresado
@@ -225,6 +201,5 @@ class Tablero:
             else:
                 #advertencia de un numero mal ingresado
                 return False
-            k=k+1
     
         
