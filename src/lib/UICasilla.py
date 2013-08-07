@@ -159,6 +159,9 @@ class Group(QtGui.QWidget):
 """  
 class Board(QtGui.QWidget):
     
+    def setAllCasillas(self, tablero):
+        for c in tablero.casillas:
+    
     """ returns a List of all casillas (cId 0 through cId 80)"""
     def getAllCasillas(self):
         toReturn = []
