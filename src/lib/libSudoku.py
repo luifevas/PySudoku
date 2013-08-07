@@ -50,6 +50,11 @@ def _swap_values(v1, v2):
 
 """ wrapper function 
 
+    @param: f
+        function that is to be called with
+    @param: args
+        parameters that are passed to the function f
+
     lets me call any function with a list of arguments instead
     heaving to pass each one individually. This can safe a lot of 
     time/code.
@@ -64,8 +69,16 @@ def _get_random_group_pair():
     
 """ Factory function to create board
 
+    @param: level
+        Level of difficulty, either "Easy", "Medium" or "Hard"
+    @return: 
+        Pair (tuple) of boards. The first item is the complete table
+        The second item is the same table but with holes. Holes are 
+        created by using an invalid value (currently -1)
+
     Creates fully populated valid Sudoku board. It does so by 
-    permuting a valid protoype
+    permuting a valid protoype. It then starts digging holes according to 
+    level of difficulty as indicated by the parameter level. 
 """
 def get_new_board(level):
     #empty the cache
@@ -80,10 +93,15 @@ def get_new_board(level):
                 _permute_inc_by(randint(1, 9))
                 _call_unpacked(_swap_values, sample([1, 2, 3, 4, 5, 6, 7, 8, 9], 2)[:2])
             return (deepcopy(_field_prototype), _digHoles(deepcopy(_field_prototype), level))
-        except noFieldGeneratedException:
+        except noTableGeneratedException:
             a = "b" #dummy 
 
-class noFieldGeneratedException(Exception):
+""" Exception that indicates that no valid Table could be generated
+
+    or no valid Table could be generated within a certain threshold of
+    computations
+"""
+class noTableGeneratedException(Exception):
     pass
 
 def _digHoles(table, level):
@@ -110,7 +128,7 @@ def _digEasyHoles(table, n, level):
 
     if endLessPrevention > 0:
         return table
-    raise noFieldGeneratedException()
+    raise noTableGeneratedException()
 
 def _digHardHoles(table, n, level):
     canBeDug = [];
@@ -134,7 +152,7 @@ def _digHardHoles(table, n, level):
                     n -= 1
                 else: table[x][y] = safeValue
                 if n < 1: return table
-    raise noFieldGeneratedException()
+    raise noTableGeneratedException()
             
 
 
@@ -214,6 +232,15 @@ def _is_group_valid(board, groupx, groupy):
                     value_seen[field] = True;
     return True
 
+""" tests if passed sudoku table is in a valid state
+
+    receives a list of lists (9 x 9) and tests if every number in:
+        1. every row
+        2. every column
+        3. every group 
+    is unique. Numbers that are bigger than 9 or smaller than 1 are
+    ignored.
+"""
 def is_board_valid(board): 
     for i in range(0, 9):
         if not _is_row_valid(board, i) or not _is_col_valid(board, i):
