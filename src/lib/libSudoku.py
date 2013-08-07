@@ -1,4 +1,5 @@
 from random import sample, choice, randint
+from copy import deepcopy
 
 _field_prototype = [
          [1, 2, 3,  4, 5, 6,  7, 8, 9],
@@ -64,32 +65,131 @@ def _get_random_group_pair():
     Creates fully populated valid Sudoku board. It does so by 
     permuting a valid protoype
 """
-def get_new_board():
-    for i in range(100):
-        _call_unpacked(_permute_rows, _get_random_group_pair())
-        _call_unpacked(_permute_cols, _get_random_group_pair())
-        _call_unpacked(_permute_group_rows, [ y * 3 for y in sample([0, 1, 2], 2) ])
-        _call_unpacked(_permute_group_cols, [ x * 3 for x in sample([0, 1, 2], 2) ])
-        _permute_inc_by(randint(1, 9))
-        _call_unpacked(_swap_values, sample([1, 2, 3, 4, 5, 6, 7, 8, 9], 2)[:2])
-    return _field_prototype
+def get_new_board(level):
+    while True:
+        try:
+            for i in range(100):
+                _call_unpacked(_permute_rows, _get_random_group_pair())
+                _call_unpacked(_permute_cols, _get_random_group_pair())
+                _call_unpacked(_permute_group_rows, [ y * 3 for y in sample([0, 1, 2], 2) ])
+                _call_unpacked(_permute_group_cols, [ x * 3 for x in sample([0, 1, 2], 2) ])
+                _permute_inc_by(randint(1, 9))
+                _call_unpacked(_swap_values, sample([1, 2, 3, 4, 5, 6, 7, 8, 9], 2)[:2])
+            return (deepcopy(_field_prototype), _digHoles(deepcopy(_field_prototype), level))
+        except noFieldGeneratedException:
+            a = "b" #dummy 
+
+class noFieldGeneratedException(Exception):
+    pass
+
+def _digHoles(table, level):
+    if ( level == "Easy"): return _digEasyHoles(table, 30, level)
+    if ( level == "Medium"): return _digEasyHoles(table, 40, level)
+    if ( level == "Hard"): return _digHardHoles(table, 40, level)
+
+def _digEasyHoles(table, n, level):
+    safeWholesToBeDug = n
+    canBeDug = [];
+    for i in range(0,9):
+        canBeDug.append([True] * 9)
+    endLessPrevention = 300;
+    while n > 0 and endLessPrevention > 0:
+        endLessPrevention -= 1
+        x = randint(0,8)
+        y = randint(0,8)
+        if canBeDug[x][y]:
+            canBeDug[x][y] = False
+            safeValue = table[x][y]
+            table[x][y] = -1
+            if _hasUniqueSolution(table): n -= 1
+            else: table[x][y] = safeValue
+
+    if endLessPrevention > 0:
+        return table
+    raise noFieldGeneratedException()
+
+def _digHardHoles(table, n, level):
+    canBeDug = [];
+    for i in range(0,9):
+        canBeDug.append([True] * 9)
+    for x in range(0,9):
+        for y in range(0,9):
+            if randint(0,n//2) == 1:
+                x = randint(0,8)
+                y = randint(0,8)
+                while not canBeDug[x][y]:
+                    x = x + 1
+                    if x % 8 != 0:
+                        x = x % 8
+                        y = (y + 1) % 8 
+            if canBeDug[x][y]:
+                safeValue = table[x][y]
+                canBeDug[x][y] = False
+                table[x][y] = -1
+                if _hasUniqueSolution(table):
+                    n -= 1
+                else: table[x][y] = safeValue
+                if n < 1: return table
+    raise noFieldGeneratedException()
+            
+
+
+
+def _hasUniqueSolution(origTable):
+    noOfSolutions = _numberOfSolutions(origTable);
+    return _numberOfSolutions(origTable) == 1
+
+""" counts valid solutions until 2
+    
+    DFS Backtracking algorithm that tries to find out if there is more than
+    one valid solution
+"""
+def _numberOfSolutions(origTable):
+    toSolve = deepcopy(origTable)
+    stillLooking = True
+    for x, row in enumerate(toSolve):
+        for y, field in enumerate(row):
+            if ( field < 1 or field > 9 ):
+                stillLooking = False
+                break
+        else: #is executed if we did not break
+            continue
+        break
+    # We have a valid solution!
+    if stillLooking:
+        return 1
+    numberOfSolutions = 0
+    for v in range(1,10):
+        toSolve[x][y] = v;
+        if is_board_valid(toSolve):
+            numberOfSolutions += _numberOfSolutions(toSolve)
+            # let's do not continue looking for solutions
+            if numberOfSolutions > 1:
+                return numberOfSolutions
+    return numberOfSolutions
+    
+def _isValidSudokuValue(v):
+    return v >= 1 and v <= 9
 
 def _is_row_valid(board, y):
     value_seen = [False] * 10
     for field in board[y]:
-        if value_seen[field]: 
-            return False
-        else:
-            value_seen[field] = True;
+        if _isValidSudokuValue(field):
+            if value_seen[field]: 
+                return False
+            else:
+                value_seen[field] = True;
     return True
 
 def _is_col_valid(board, x):
     value_seen = [False] * 10
     for row in board:
-        if value_seen[row[x]]:
-            return False
-        else:
-            value_seen[row[x]] = True;
+        field = row[x];
+        if _isValidSudokuValue(field):
+            if value_seen[field]:
+                return False
+            else:
+                value_seen[field] = True;
     return True
 
 def _is_group_valid(board, groupx, groupy): 
@@ -98,10 +198,12 @@ def _is_group_valid(board, groupx, groupy):
         for y in range(0, 3):
             nextx = x + groupx;
             nexty = y + groupx;
-            if value_seen[board[nextx][nexty]]:
-                return False
-        else:
-            value_seen[board[nextx][nexty]] = True;
+            field = board[nextx][nexty]
+            if _isValidSudokuValue(field):
+                if value_seen[field]:
+                    return False
+                else:
+                    value_seen[field] = True;
     return True
 
 def is_board_valid(board): 
@@ -113,3 +215,5 @@ def is_board_valid(board):
             if not _is_group_valid(board, i * 3, j * 3):
                 return False 
     return True
+
+if __name__ == "__main__":
