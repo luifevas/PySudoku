@@ -7,7 +7,7 @@ from PyQt4 import QtCore
 
 """ Smallest widget that resembles one sudoku field
 
-    This is the smallest Widget. It allows for setting one value
+    This is the smallest widget. It allows for setting one value
     and 4 auxiliary values.
 """
 class CasillaWidget(QtGui.QWidget):
@@ -158,6 +158,13 @@ class Group(QtGui.QWidget):
     Casilla of the third row has the cId 18 and so on.
 """  
 class Board(QtGui.QWidget):
+    
+    """ returns a List of all casillas (cId 0 through cId 80)"""
+    def getAllCasillas(self):
+        toReturn = []
+        for i in range(0, 81):
+            toReturn.append(self.getCasilla(i))
+        return toReturn
     
     def setValue(self, cId , v):
         self.getCasilla(cId).setValue(v)
