@@ -31,7 +31,6 @@ class Tablero:
         self.jugador=Jugador(nombre,numPista)
         for i in range(1,10):
             for j in range(1,10):
-                k=0
                 k=self.buscarRegion(i,j)
                 a=Casilla(i,j,k)
                 self.casillas.append(a)
