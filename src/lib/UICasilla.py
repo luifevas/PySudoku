@@ -5,7 +5,11 @@ import sys
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 
+""" Smallest widget that resembles one sudoku field
 
+    This is the smallest Widget. It allows for setting one value
+    and 4 auxiliary values.
+"""
 class CasillaWidget(QtGui.QWidget):
     
     def __init__(self, value, cId, locked = False, wheelEnabled = True ):
@@ -113,9 +117,11 @@ class CasillaWidget(QtGui.QWidget):
             #TODO change
             if aux > 0:
                 qp.drawText(auxPos[i][0],auxPos[i][1], str(aux))
-                    
 
-        
+""" Group of 9 Casillas    
+    
+    A Container Widget that stores 9 Casillas
+"""
 class Group(QtGui.QWidget):
     
     def __init__(self, gId):
@@ -142,9 +148,16 @@ class Group(QtGui.QWidget):
                 grid.addWidget(cas, i, j)
         self.setWindowTitle('CasillaWidget Example')
         #self.show()
+
+""" A Sudoku board, consisting of 9 Groups of Casillas 
         
-        
-class Field(QtGui.QWidget):
+    All Casillas of the Board have an cId starting from 
+    0 through 80. The cId are distributed by row. That means:
+    The top left casilla has the cId 0. The
+    3rd Casilla in the first row has the cId 3. The first 
+    Casilla of the third row has the cId 18 and so on.
+"""  
+class Board(QtGui.QWidget):
     
     def setValue(self, cId , v):
         self.getCasilla(cId).setValue(v)
@@ -162,7 +175,7 @@ class Field(QtGui.QWidget):
         return self.groups[gId].getCasilla(xs)
 
     def __init__(self):
-        super(Field, self).__init__()
+        super(Board, self).__init__()
         self.groups = []
         self.initUI()
         
@@ -199,7 +212,7 @@ def _cIdToGroup(cId):
 def main():
     
     app = QtGui.QApplication(sys.argv)
-    f = Field()
+    b = Board()
     sys.exit(app.exec_())
     
 if __name__ == '__main__':
