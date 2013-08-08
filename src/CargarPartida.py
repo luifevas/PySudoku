@@ -1,5 +1,5 @@
 from PyQt4 import QtCore,QtGui
-from Tablero import Tablero
+
 class CargarPartida(object):
     lista=''
     tablero=''
@@ -8,13 +8,13 @@ class CargarPartida(object):
         '''
         Constructor
         '''
-        tablero=board
+
     def cargarJugador(self):
         
         
         fout = open("guardarPartida", "r")
         
-        lines=fout.readlines();
+        lines=fout.readlines()
         
         listaNumeros=lines[0].split(",")
         listaNumeros.pop()

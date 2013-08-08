@@ -30,6 +30,8 @@ class CasillaWidget(QtGui.QWidget):
         self.repaint()
     def isLocked(self):
         return self.locked
+    def getValue(self):
+        return self.value
     def setValue(self, v):
         self.value = v
         self.repaint()

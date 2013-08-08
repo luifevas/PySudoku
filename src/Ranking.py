@@ -17,9 +17,23 @@ class VentanaRanking(QMainWindow,rankingwindow.Ui_RankingWindow):
         model.setHorizontalHeaderItem(0,QStandardItem("Nombre"))
         model.setHorizontalHeaderItem(1,QStandardItem("Puntaje"))
         self.tableView.setModel(model)
+        fout = open("ranking.txt", "r")
+        lines= fout.readlines()
+        listanombres=lines[0].split(",")
+        for i in range(0,len(listanombres)):
+            index1 = model.index(i,0,QModelIndex())
+            model.setData(index1,listanombres[i])
+            index2 = model.index(i,1,QModelIndex())
+            model.setData(index2,listanombres[i])
+
+        
         
     def backclicked(self):
         self.close();
+        
+        
+        
+        
 if __name__ == '__main__':
     import sys
     app = QApplication(sys.argv)

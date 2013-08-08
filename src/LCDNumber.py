@@ -41,7 +41,6 @@ class LCDNumber(QtGui.QWidget):
         self.show()
     def showlcd(self):
         self.time.setHMS(0,self.time.addMSecs(+1).minute(),self.time.addMSecs(+1).second(),self.time.addMSecs(+1).msec())
-      
         text = self.time.toString('hh:mm:ss')
         self.lcd.display(text)
         

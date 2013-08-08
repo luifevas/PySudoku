@@ -27,8 +27,6 @@ class Tablero:
     MainWindow=''
     reloj=''
     x=''
-    board=[]
-    
     def __init__(self,nombre,numPista):
         '''
         Constructor
@@ -52,11 +50,11 @@ class Tablero:
                 #self.MainWindow.connect(x, QtCore.SIGNAL("editingFinished()"),self.checkSudoku)
                 #self.listaQLineEdit.append(x)
                 #self.MainWindow.sudokuLayout.addWidget(x,i,j)
-        self.board=libSudoku.get_new_board("Easy")
         self.x=UICasilla.Board()
         self.llenarSudoku(self.x)
         self.MainWindow.tableroLayout.addWidget(self.x)
         self.llenarUI()
+        #self.MainWindow.connect(self.MainWindow.pushButton,QtCore.SIGNAL("clicked()"),self.guardarPartida())
         for casilla in self.x.getAllCasillas():
             self.MainWindow.connect(casilla,QtCore.SIGNAL("valueChanged()"),self.checkSudoku)
         self.MainWindow.show()
@@ -68,7 +66,13 @@ class Tablero:
         listaListaCasillasValues = [listaCasillasValues[x:x+9] for x in range(0, len(listaCasillasValues), 9)]
         if libSudoku.is_board_valid(listaListaCasillasValues):
             if len([elem for elem in listaCasillasValues if elem < 1 ]) == 0:
+                msg=QtGui.QMessageBox()
+                msg.setText("Ha completado un Sudoku!.")
+                tiempo= ((self.reloj.time.minute())*60)+(self.reloj.time.second())
+                self.guardarRanking(self.jugador.getNombre(),tiempo)
+                msg.exec_()
                 self.MainWindow.close()
+                
             
             
             
@@ -242,5 +246,23 @@ class Tablero:
                 #advertencia de un numero mal ingresado
                 return False
             k=k+1
+    def guardarRanking(self,nombre,tiempo):
+        fout=open("ranking.txt","w")
+        fout.write(nombre+","+str(tiempo))
+        
+    def guardarPartida(self):
+        self.Guardar()
     
+    def Guardar(self):
+        fout = open("guardarPartida.txt", "w")
+        listacasilla=self.x.getAllCasillas()
+        
+        for elemento in listacasilla:
+            if elemento.isLocked()():
+                fout.write(str(elemento.getValue()())+","+str(1)+",")
+            else:
+                fout.write(str(elemento.getValue())+","+str(0)+",")
+            
+            
+        fout.close() 
         
