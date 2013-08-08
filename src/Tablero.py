@@ -67,7 +67,8 @@ class Tablero:
         listaCasillasValues = [c.value for c in listaCasillas]
         listaListaCasillasValues = [listaCasillasValues[x:x+9] for x in range(0, len(listaCasillasValues), 9)]
         if libSudoku.is_board_valid(listaListaCasillasValues):
-            self.MainWindow.close()
+            if len([elem for elem in listaCasillasValues if elem < 1 ]) == 0:
+                self.MainWindow.close()
             
             
             
