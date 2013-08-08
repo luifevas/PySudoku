@@ -57,16 +57,17 @@ class Tablero:
         self.llenarSudoku(self.x)
         self.MainWindow.tableroLayout.addWidget(self.x)
         self.llenarUI()
-        #for casilla in self.x.getAllCasillas():
-            #self.MainWindow.connect(casilla,"valueChanged()",self.checkSudoku())
+        for casilla in self.x.getAllCasillas():
+            self.MainWindow.connect(casilla,"valueChanged()",self.checkSudoku())
         self.MainWindow.show()
     
     
-    #def checkSudoku(self):
-        #listacasillas=self.x.getAllCasillas()
-        #llcas = [listacasillas[x:x+9] for x in range(0, len(listacasillas), 9)]
-        #if libSudoku.is_board_valid(llcas):
-            #self.MainWindow.close()
+    def checkSudoku(self):
+        listaCasillas=self.x.getAllCasillas()
+        listaCasillasValues = [c.value for c in listaCasillas]
+        listaListaCasillasValues = [listaCasillasValues[x:x+9] for x in range(0, len(listaCasillasValues), 9)]
+        if libSudoku.is_board_valid(listaListaCasillasValues):
+            self.MainWindow.close()
             
             
             
