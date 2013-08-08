@@ -11,8 +11,8 @@ import random
 from PyQt4 import QtGui,QtCore, QtGui
 from sudokuwindow import Ui_SudokuWindow
 from ventanaSud import VentanaSud
-from src.lib import UICasilla
-from src.lib import libSudoku
+from lib import UICasilla
+from lib import libSudoku
 from LCDNumber import LCDNumber
 class Tablero:
     '''
@@ -81,6 +81,7 @@ class Tablero:
                 cID = i * 9 + j
                 v = casillasAgujeros[i][j]
                 b.setValue(cID,v)
+                b.setMark(cID,False)
                 if v < 1:
                     b.setLock(cID,False)
                 else:
