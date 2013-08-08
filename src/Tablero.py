@@ -58,7 +58,7 @@ class Tablero:
         self.MainWindow.tableroLayout.addWidget(self.x)
         self.llenarUI()
         for casilla in self.x.getAllCasillas():
-            self.MainWindow.connect(casilla,"valueChanged()",self.checkSudoku())
+            self.MainWindow.connect(casilla,QtCore.SIGNAL("valueChanged()"),self.checkSudoku)
         self.MainWindow.show()
     
     
